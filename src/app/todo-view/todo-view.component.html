@@ -1,11 +1,18 @@
 <h1>Todo</h1>
 <form (submit)="addTodo($event)">
-  <input type="text" value="{{ task }}" (change)="updateTask($event)" />
-  <button type="submit">Add</button>
+  <mat-form-field>
+    <input
+      matInput
+      type="text"
+      value="{{ task }}"
+      (change)="updateTask($event)"
+    />
+  </mat-form-field>
+  <button mat-button type="submit">Add</button>
 </form>
 <ul>
   <li *ngFor="let todo of todos">
     {{ todo.task }}
-    <button (click)="clearTodo(todo.id)">Delete</button>
+    <button mat-button (click)="clearTodo(todo.id)">Delete</button>
   </li>
 </ul>
