@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { FormControl, FormGroup } from '@angular/forms';
 
 const API_URL = 'http://localhost:5000/todos';
 
@@ -13,7 +14,10 @@ interface Todo {
   templateUrl: './todo-view.component.html',
 })
 export class TodoViewComponent implements OnInit {
-  task = '';
+  taskForm = new FormGroup({
+    task: new FormControl(''),
+  });
+
   todos: Todo[] = [];
 
   constructor(private http: HttpClient) {}
@@ -22,21 +26,19 @@ export class TodoViewComponent implements OnInit {
     this.http.get(API_URL).subscribe((todos: Todo[]) => (this.todos = todos));
   }
 
-  async addTodo(event: any) {
-    event.preventDefault();
+  async addTodo() {
+    const { task } = this.taskForm.value;
+
     this.http
-      .post(API_URL, this.task)
+      .post(API_URL, task)
       .subscribe((todo: Todo) => (this.todos = [...this.todos, todo]));
-    this.task = '';
+
+    this.taskForm.setValue({ task: '' });
   }
 
   async clearTodo(id: string) {
     this.http
       .delete(`${API_URL}/${id}`)
       .subscribe((_) => (this.todos = this.todos.filter((t) => t.id !== id)));
-  }
-
-  updateTask(event: KeyboardEvent) {
-    this.task = (event.target as HTMLInputElement).value;
   }
 }

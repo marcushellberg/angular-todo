@@ -1,12 +1,7 @@
 <h1>Todo</h1>
-<form (submit)="addTodo($event)">
+<form [formGroup]="taskForm" (ngSubmit)="addTodo()">
   <mat-form-field>
-    <input
-      matInput
-      type="text"
-      value="{{ task }}"
-      (change)="updateTask($event)"
-    />
+    <input matInput type="text" formControlName="task" />
   </mat-form-field>
   <button mat-button type="submit">Add</button>
 </form>
