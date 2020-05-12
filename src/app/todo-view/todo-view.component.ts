@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormControl, FormGroup } from '@angular/forms';
 
-const API_URL = 'http://localhost:5000/todos';
+const API_URL = 'https://vaadin-todo-api.herokuapp.com/todos';
 
 interface Todo {
   id?: string;
@@ -23,14 +23,16 @@ export class TodoViewComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.http.get(API_URL).subscribe((todos: Todo[]) => (this.todos = todos));
+    this.http
+      .get<Todo[]>(API_URL)
+      .subscribe((todos: Todo[]) => (this.todos = todos));
   }
 
   async addTodo() {
     const { task } = this.taskForm.value;
 
     this.http
-      .post(API_URL, task)
+      .post<Todo>(API_URL, task)
       .subscribe((todo: Todo) => (this.todos = [...this.todos, todo]));
 
     this.taskForm.setValue({ task: '' });
