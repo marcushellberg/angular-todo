@@ -2,6 +2,7 @@
 <form [formGroup]="taskForm" (ngSubmit)="addTodo()">
   <mat-form-field>
     <input matInput type="text" formControlName="task" />
+    <mat-error *ngIf="task.invalid">Task cannot be empty</mat-error>
   </mat-form-field>
   <button mat-button type="submit">Add</button>
 </form>

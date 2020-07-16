@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 const API_URL = 'https://vaadin-todo-api.herokuapp.com/todos';
 
@@ -15,7 +15,7 @@ interface Todo {
 })
 export class TodoViewComponent implements OnInit {
   taskForm = new FormGroup({
-    task: new FormControl(''),
+    task: new FormControl('', [Validators.required]),
   });
 
   todos: Todo[] = [];
@@ -31,16 +31,19 @@ export class TodoViewComponent implements OnInit {
   async addTodo() {
     const { task } = this.taskForm.value;
 
-    this.http
-      .post<Todo>(API_URL, task)
-      .subscribe((todo: Todo) => (this.todos = [...this.todos, todo]));
-
-    this.taskForm.setValue({ task: '' });
+    this.http.post<Todo>(API_URL, task).subscribe((todo: Todo) => {
+      this.todos = [...this.todos, todo];
+      this.taskForm.reset();
+    });
   }
 
   async clearTodo(id: string) {
     this.http
       .delete(`${API_URL}/${id}`)
       .subscribe((_) => (this.todos = this.todos.filter((t) => t.id !== id)));
+  }
+
+  get task() {
+    return this.taskForm.get('task');
   }
 }
